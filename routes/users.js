@@ -6,8 +6,18 @@ var authenticate = require("../authenticate");
 
 var router = express.Router();
 router.use(bodyParser.json());
-/* GET users listing. */
 
+// GET users listing. 
+router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function (req, res, next) {
+  User.find({}).then((users) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(users);
+  }, (err) => next(err))
+    .catch((err) => next(err));
+});
+
+// For Sign up
 router.post('/signup', (req, res, next) => {
   User.register(new User({ username: req.body.username }),
     req.body.password, (err, user) => {
@@ -38,6 +48,7 @@ router.post('/signup', (req, res, next) => {
     });
 });
  
+// For Login
 router.post("/login", passport.authenticate("local"), (req, res) => {
   var token = authenticate.getToken({ _id: req.user._id });
   res.statusCode = 200;
@@ -49,7 +60,7 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
  });
 });
 
-
+// For Logout
 router.get("/logout", (req, res) => {
   if (req.session) {
     req.session.destroy();
@@ -62,8 +73,5 @@ router.get("/logout", (req, res) => {
   }
 });
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
 module.exports = router;
