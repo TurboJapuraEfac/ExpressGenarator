@@ -16,6 +16,7 @@ var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
 var uploadRouter = require("./routes/uploadRouter");
+const favoriteRouter = require('./routes/favoriteRouter')
 
 
 const mongoose = require("mongoose");
@@ -75,6 +76,7 @@ app.use('/promotions', promoRouter);
 app.use('/leaders', leaderRouter);
 //image wala end point eka
 app.use("/imageUpload", uploadRouter);
+app.use('/favorites', favoriteRouter);
 
 
 // catch 404 and forward to error handler
